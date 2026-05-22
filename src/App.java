@@ -43,21 +43,21 @@ public class App {
     //     }
     // }
 
-    static class ItemPedido {
-        Producto producto;
-        Variante variante;
-        int cantidad;
+    // static class ItemPedido {
+    //     Producto producto;
+    //     Variante variante;
+    //     int cantidad;
 
-        ItemPedido(Producto producto, Variante variante, int cantidad) {
-            this.producto  = producto;
-            this.variante  = variante;
-            this.cantidad  = cantidad;
-        }
+    //     ItemPedido(Producto producto, Variante variante, int cantidad) {
+    //         this.producto  = producto;
+    //         this.variante  = variante;
+    //         this.cantidad  = cantidad;
+    //     }
 
-        int subtotal() {
-            return variante.getPrecio() * cantidad;
-        }
-    }
+    //     int subtotal() {
+    //         return variante.getPrecio() * cantidad;
+    //     }
+    // }
 
     // =========================================================
     //  ESTADO GLOBAL
@@ -488,8 +488,8 @@ public class App {
             // Si ya existe ese producto+variante en el pedido, sumar cantidad
             boolean encontrado = false;
             for (ItemPedido item : pedidoActual) {
-                if (item.producto == p && item.variante == varianteElegida) {
-                    item.cantidad += cant;
+                if (item.getProducto() == p && item.getVariante() == varianteElegida) {
+                    item.setCantidad(item.getCantidad() + cant);
                     encontrado = true;
                     break;
                 }
@@ -536,10 +536,10 @@ public class App {
             ItemPedido item = pedidoActual.get(i);
             System.out.printf("  %-3d %-36s %-10s %10s%n",
                     i + 1,
-                    item.cantidad > 1
-                            ? item.producto.getNombre() + " x" + item.cantidad
-                            : item.producto.getNombre(),
-                    item.variante.getTamano(),
+                    item.getCantidad() > 1
+                            ? item.getProducto().getNombre() + " x" + item.getCantidad()
+                            : item.getProducto().getNombre(),
+                    item.getVariante().getTamano(),
                     formatoPrecio(item.subtotal()));
         }
 
@@ -565,7 +565,7 @@ public class App {
             int idx = Integer.parseInt(leerLinea()) - 1;
             if (idx >= 0 && idx < pedidoActual.size()) {
                 ItemPedido eliminado = pedidoActual.remove(idx);
-                System.out.printf("%n  ✘  '%s' eliminado del pedido.%n%n", eliminado.producto.getNombre());
+                System.out.printf("%n  ✘  '%s' eliminado del pedido.%n%n", eliminado.getProducto().getNombre());
             } else {
                 System.out.println("\n  Número inválido.\n");
             }
