@@ -1,5 +1,8 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/ec1253db-c725-466a-8ea2-db31df638f84" alt="Brasa en Casa - Experiencias al Carbón" width="100%"/>
+<p align="center" style="overflow: hidden; max-height: 220px; border-radius: 8px;">
+  <img src="https://github.com/user-attachments/assets/25e4f01a-3630-4b3d-98b8-db9cac54ba1f"
+       alt="Brasa en Casa - Experiencias al Carbón"
+       width="100%"
+       style="object-fit: cover; object-position: center 40%; margin-top: -60px; margin-bottom: -60px;"/>
 </p>
 
 # 🔥 Brasa en Casa — Sistema de Pedidos
