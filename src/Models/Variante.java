@@ -8,7 +8,6 @@ public class Variante {
 
 
     // Getters y Setters
-
     public String getTamano() {
         return this.tamano;
     }
@@ -20,7 +19,6 @@ public class Variante {
     public void setTamano(String tamano) {
         this.tamano = tamano;
     }
-
 
     public void setPrecio(int precio) {
         this.precio = precio;

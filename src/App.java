@@ -1,5 +1,5 @@
 import java.util.*;
-import Models.Variante;
+import Models.*;
 
 /**
  * ============================================================
@@ -24,24 +24,24 @@ public class App {
     //     }
     // }
 
-    static class Producto {
-        String nombre;
-        String descripcion;
-        String categoria;
-        List<Variante> variantes;
+    // static class Producto {
+    //     String nombre;
+    //     String descripcion;
+    //     String categoria;
+    //     List<Variante> variantes;
 
-        Producto(String nombre, String descripcion, String categoria, Variante... variantes) {
-            this.nombre      = nombre;
-            this.descripcion = descripcion;
-            this.categoria   = categoria;
-            this.variantes   = new ArrayList<>(Arrays.asList(variantes));
-        }
+    //     Producto(String nombre, String descripcion, String categoria, Variante... variantes) {
+    //         this.nombre      = nombre;
+    //         this.descripcion = descripcion;
+    //         this.categoria   = categoria;
+    //         this.variantes   = new ArrayList<>(Arrays.asList(variantes));
+    //     }
 
-        /** Precio mínimo (para mostrar "desde $X" cuando hay varias variantes) */
-        int precioMinimo() {
-            return variantes.stream().mapToInt(v -> v.getPrecio()).min().orElse(0);
-        }
-    }
+    //     /** Precio mínimo (para mostrar "desde $X" cuando hay varias variantes) */
+    //     int precioMinimo() {
+    //         return variantes.stream().mapToInt(v -> v.getPrecio()).min().orElse(0);
+    //     }
+    // }
 
     static class ItemPedido {
         Producto producto;
@@ -367,7 +367,7 @@ public class App {
 
         for (String cat : categoriasSeccion) {
             for (Producto p : CARTA) {
-                if (p.categoria.equals(cat)) productos.add(p);
+                if (p.getCategoria().equals(cat)) productos.add(p);
             }
         }
 
@@ -381,21 +381,21 @@ public class App {
 
             String catActual = "";
             for (Producto p : productos) {
-                if (!p.categoria.equals(catActual)) {
-                    catActual = p.categoria;
+                if (!p.getCategoria().equals(catActual)) {
+                    catActual = p.getCategoria();
                     if (categoriasSeccion.size() > 1) subtitulo(catActual);
                 }
 
                 // Precio: si tiene 1 variante muestra el precio, si tiene varias muestra "desde $X"
-                String precio = p.variantes.size() == 1
-                        ? formatoPrecio(p.variantes.get(0).getPrecio())
+                String precio = p.getVariantes().size() == 1
+                        ? formatoPrecio(p.getVariantes().get(0).getPrecio())
                         : "desde " + formatoPrecio(p.precioMinimo());
 
-                System.out.printf("  %-2d. %-38s %s%n", numero, p.nombre, precio);
+                System.out.printf("  %-2d. %-38s %s%n", numero, p.getNombre(), precio);
 
-                if (!p.descripcion.isEmpty()) {
+                if (!p.getDescripcion().isEmpty()) {
                     // Descripción en líneas de máx. 55 chars
-                    String desc = p.descripcion;
+                    String desc = p.getDescripcion();
                     while (desc.length() > 55) {
                         System.out.println("       " + desc.substring(0, 55));
                         desc = desc.substring(55);
@@ -403,8 +403,8 @@ public class App {
                     System.out.println("       " + desc);
                 }
 
-                if (p.variantes.size() > 1) {
-                    for (Variante v : p.variantes) {
+                if (p.getVariantes().size() > 1) {
+                    for (Variante v : p.getVariantes()) {
                         System.out.printf("         · %-15s %s%n", v.getTamano(), formatoPrecio(v.getPrecio()));
                     }
                 }
@@ -440,20 +440,20 @@ public class App {
 
     static void agregarAlPedido(Producto p) {
         titulo("  AGREGAR AL PEDIDO  ");
-        System.out.println("  Producto: " + p.nombre);
+        System.out.println("  Producto: " + p.getNombre());
         lineaDelgada();
 
         Variante varianteElegida;
 
-        if (p.variantes.size() == 1) {
-            varianteElegida = p.variantes.get(0);
+        if (p.getVariantes().size() == 1) {
+            varianteElegida = p.getVariantes().get(0);
             System.out.printf("  Tamaño : %s%n", varianteElegida.getTamano());
             System.out.printf("  Precio : %s%n", formatoPrecio(varianteElegida.getPrecio()));
         } else {
             System.out.println("  Seleccione el tamaño:");
             System.out.println();
-            for (int i = 0; i < p.variantes.size(); i++) {
-                Variante v = p.variantes.get(i);
+            for (int i = 0; i < p.getVariantes().size(); i++) {
+                Variante v = p.getVariantes().get(i);
                 System.out.printf("  %d. %-20s %s%n", i + 1, v.getTamano(), formatoPrecio(v.getPrecio()));
             }
             System.out.println("  0. Cancelar");
@@ -465,11 +465,11 @@ public class App {
 
             try {
                 int idxV = Integer.parseInt(input) - 1;
-                if (idxV < 0 || idxV >= p.variantes.size()) {
+                if (idxV < 0 || idxV >= p.getVariantes().size()) {
                     System.out.println("\n  Opción inválida.\n");
                     return;
                 }
-                varianteElegida = p.variantes.get(idxV);
+                varianteElegida = p.getVariantes().get(idxV);
             } catch (NumberFormatException e) {
                 System.out.println("\n  Entrada inválida.\n");
                 return;
@@ -500,7 +500,7 @@ public class App {
 
             linea();
             System.out.printf("  ✔  %s (%s) x%d → %s%n",
-                    p.nombre, varianteElegida.getTamano(), cant,
+                    p.getNombre(), varianteElegida.getTamano(), cant,
                     formatoPrecio(varianteElegida.getPrecio() * cant));
             System.out.println("     Agregado al pedido correctamente.");
             linea();
@@ -537,8 +537,8 @@ public class App {
             System.out.printf("  %-3d %-36s %-10s %10s%n",
                     i + 1,
                     item.cantidad > 1
-                            ? item.producto.nombre + " x" + item.cantidad
-                            : item.producto.nombre,
+                            ? item.producto.getNombre() + " x" + item.cantidad
+                            : item.producto.getNombre(),
                     item.variante.getTamano(),
                     formatoPrecio(item.subtotal()));
         }
@@ -565,7 +565,7 @@ public class App {
             int idx = Integer.parseInt(leerLinea()) - 1;
             if (idx >= 0 && idx < pedidoActual.size()) {
                 ItemPedido eliminado = pedidoActual.remove(idx);
-                System.out.printf("%n  ✘  '%s' eliminado del pedido.%n%n", eliminado.producto.nombre);
+                System.out.printf("%n  ✘  '%s' eliminado del pedido.%n%n", eliminado.producto.getNombre());
             } else {
                 System.out.println("\n  Número inválido.\n");
             }
@@ -667,16 +667,16 @@ public class App {
         String catActual = "";
         int num = 1;
         for (Producto p : CARTA) {
-            if (!p.categoria.equals(catActual)) {
-                catActual = p.categoria;
+            if (!p.getCategoria().equals(catActual)) {
+                catActual = p.getCategoria();
                 subtitulo(catActual);
             }
-            if (p.variantes.size() == 1) {
+            if (p.getVariantes().size() == 1) {
                 System.out.printf("  %2d. %-38s %s%n",
-                        num, p.nombre, formatoPrecio(p.variantes.get(0).getPrecio()));
+                        num, p.getNombre(), formatoPrecio(p.getVariantes().get(0).getPrecio()));
             } else {
-                System.out.printf("  %2d. %s%n", num, p.nombre);
-                for (Variante v : p.variantes) {
+                System.out.printf("  %2d. %s%n", num, p.getNombre());
+                for (Variante v : p.getVariantes()) {
                     System.out.printf("       · %-18s %s%n", v.getTamano(), formatoPrecio(v.getPrecio()));
                 }
             }
@@ -698,24 +698,24 @@ public class App {
             }
 
             Producto p = CARTA.get(idx);
-            System.out.println("\n  Producto: " + p.nombre);
+            System.out.println("\n  Producto: " + p.getNombre());
 
             Variante varianteEditar;
-            if (p.variantes.size() == 1) {
-                varianteEditar = p.variantes.get(0);
+            if (p.getVariantes().size() == 1) {
+                varianteEditar = p.getVariantes().get(0);
             } else {
                 System.out.println("  Seleccione la variante:");
-                for (int i = 0; i < p.variantes.size(); i++) {
-                    Variante v = p.variantes.get(i);
+                for (int i = 0; i < p.getVariantes().size(); i++) {
+                    Variante v = p.getVariantes().get(i);
                     System.out.printf("  %d. %-18s %s%n", i + 1, v.getTamano(), formatoPrecio(v.getPrecio()));
                 }
                 System.out.print("  Variante: ");
                 int idxV = Integer.parseInt(leerLinea()) - 1;
-                if (idxV < 0 || idxV >= p.variantes.size()) {
+                if (idxV < 0 || idxV >= p.getVariantes().size()) {
                     System.out.println("\n  Opción inválida.\n");
                     return;
                 }
-                varianteEditar = p.variantes.get(idxV);
+                varianteEditar = p.getVariantes().get(idxV);
             }
 
             System.out.printf("  Precio actual: %s%n", formatoPrecio(varianteEditar.getPrecio()));
