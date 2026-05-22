@@ -43,14 +43,32 @@
 
 ---
 
+## Estructura del proyecto
+
+```
+BrasaEnCasa_ConsolaApp/
+├── src/
+│   ├── App.java              — Clase principal (flujo, menús, caja, admin)
+│   └── Models/
+│       ├── Variante.java     — Tamaño + precio de una presentación
+│       ├── Producto.java     — Nombre, descripción, categoría, variantes
+│       └── ItemPedido.java   — Producto + variante elegida + cantidad
+├── bin/                      — Clases compiladas (.class)
+└── README.md
+```
+
+---
+
 ## Cómo ejecutar
 
+Desde la raíz del proyecto:
+
 ```bash
-# Compilar
-javac -encoding UTF-8 App.java
+# Compilar (genera los .class en bin/)
+javac -encoding UTF-8 -d bin src/App.java src/Models/*.java
 
 # Ejecutar
-java App
+java -cp bin App
 ```
 
 > El flag `-encoding UTF-8` asegura que tildes y caracteres especiales se muestren correctamente.
@@ -76,7 +94,7 @@ Menú principal
 
 ## Panel de Administración
 
-Clave de acceso: `brasa2024`
+Clave de acceso: `brasa2026`
 
 | Opción                  | Descripción                                      |
 |-------------------------|--------------------------------------------------|
@@ -89,23 +107,39 @@ Clave de acceso: `brasa2024`
 
 ## Arquitectura
 
-Todo el sistema está contenido en `App.java`, organizado en clases internas estáticas:
+El sistema está separado en una clase principal y un paquete de modelos:
+
+### `src/App.java` — Clase principal
+
+Contiene el estado global (carta, secciones, pedido activo, caja) y todos los métodos del flujo:
 
 ```
 App.java
-├── Variante         — tamaño + precio de una presentación
-├── Producto         — nombre, descripción, categoría, lista de variantes
-├── ItemPedido       — producto + variante elegida + cantidad
-└── métodos estáticos
-    ├── inicializarCarta()      — carga los 30+ productos del menú real
-    ├── inicializarSecciones()  — agrupa categorías en secciones del menú
-    ├── menuCarta()             — navegación por secciones
-    ├── mostrarSeccion()        — lista productos por categoría interna
-    ├── agregarAlPedido()       — selección de variante y cantidad
-    ├── verPedido()             — resumen del pedido activo
-    ├── cerrarPedido()          — confirmación y registro en caja
-    └── menuAdmin()             — panel de administración
+├── inicializarCarta()       — carga los 30+ productos del menú real
+├── inicializarSecciones()   — agrupa categorías en secciones del menú
+├── main()                   — bucle principal con menú raíz
+├── menuCarta()              — navegación por secciones
+├── mostrarSeccion()         — lista productos por categoría interna
+├── agregarAlPedido()        — selección de variante y cantidad
+├── verPedido()              — resumen del pedido activo
+├── eliminarItem()           — eliminar ítems del pedido
+├── cerrarPedido()           — confirmación y registro en caja
+├── cancelarPedido()         — descarte del pedido activo
+├── autenticarAdmin()        — validación de clave de admin
+├── menuAdmin()              — panel de administración
+├── reporteVentas()          — total vendido y saldo en caja
+├── verStockAdmin()          — carta completa con precios
+├── cambiarPrecioAdmin()     — editar precios por variante
+└── retirarDineroAdmin()     — retiro con validación de saldo
 ```
+
+### `src/Models/` — Modelos del dominio
+
+| Clase         | Responsabilidad                                            |
+|---------------|------------------------------------------------------------|
+| `Variante`    | Tamaño y precio de una presentación de un producto         |
+| `Producto`    | Nombre, descripción, categoría y lista de variantes        |
+| `ItemPedido`  | Producto + variante elegida + cantidad, con `subtotal()`   |
 
 ---
 
@@ -113,10 +147,10 @@ App.java
 
 Desarrollado como proyecto académico inspirado en el restaurante real **Brasa en Casa**.
 
-| Nombre                      | Rol             |
-|-----------------------------|-----------------|
-| Luis Alejandro Londoño Valle | Desarrollador   |
-| Yeison Alejandro Zapata      | Desarrollador   |
+| Nombre                       | Rol           |
+|------------------------------|---------------|
+| Luis Alejandro Londoño Valle | Desarrollador |
+| Yeison Alejandro Zapata      | Desarrollador |
 
 ---
 
