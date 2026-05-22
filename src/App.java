@@ -1,4 +1,5 @@
 import java.util.*;
+import Models.Variante;
 
 /**
  * ============================================================
@@ -13,15 +14,15 @@ public class App {
     //  MODELOS
     // =========================================================
 
-    static class Variante {
-        String tamano;
-        int precio;
+    // static class Variante {
+    //     String tamano;
+    //     int precio;
 
-        Variante(String tamano, int precio) {
-            this.tamano = tamano;
-            this.precio = precio;
-        }
-    }
+    //     Variante(String tamano, int precio) {
+    //         this.tamano = tamano;
+    //         this.precio = precio;
+    //     }
+    // }
 
     static class Producto {
         String nombre;
@@ -38,7 +39,7 @@ public class App {
 
         /** Precio mínimo (para mostrar "desde $X" cuando hay varias variantes) */
         int precioMinimo() {
-            return variantes.stream().mapToInt(v -> v.precio).min().orElse(0);
+            return variantes.stream().mapToInt(v -> v.getPrecio()).min().orElse(0);
         }
     }
 
@@ -54,7 +55,7 @@ public class App {
         }
 
         int subtotal() {
-            return variante.precio * cantidad;
+            return variante.getPrecio() * cantidad;
         }
     }
 
@@ -387,7 +388,7 @@ public class App {
 
                 // Precio: si tiene 1 variante muestra el precio, si tiene varias muestra "desde $X"
                 String precio = p.variantes.size() == 1
-                        ? formatoPrecio(p.variantes.get(0).precio)
+                        ? formatoPrecio(p.variantes.get(0).getPrecio())
                         : "desde " + formatoPrecio(p.precioMinimo());
 
                 System.out.printf("  %-2d. %-38s %s%n", numero, p.nombre, precio);
@@ -404,7 +405,7 @@ public class App {
 
                 if (p.variantes.size() > 1) {
                     for (Variante v : p.variantes) {
-                        System.out.printf("         · %-15s %s%n", v.tamano, formatoPrecio(v.precio));
+                        System.out.printf("         · %-15s %s%n", v.getTamano(), formatoPrecio(v.getPrecio()));
                     }
                 }
 
@@ -446,14 +447,14 @@ public class App {
 
         if (p.variantes.size() == 1) {
             varianteElegida = p.variantes.get(0);
-            System.out.printf("  Tamaño : %s%n", varianteElegida.tamano);
-            System.out.printf("  Precio : %s%n", formatoPrecio(varianteElegida.precio));
+            System.out.printf("  Tamaño : %s%n", varianteElegida.getTamano());
+            System.out.printf("  Precio : %s%n", formatoPrecio(varianteElegida.getPrecio()));
         } else {
             System.out.println("  Seleccione el tamaño:");
             System.out.println();
             for (int i = 0; i < p.variantes.size(); i++) {
                 Variante v = p.variantes.get(i);
-                System.out.printf("  %d. %-20s %s%n", i + 1, v.tamano, formatoPrecio(v.precio));
+                System.out.printf("  %d. %-20s %s%n", i + 1, v.getTamano(), formatoPrecio(v.getPrecio()));
             }
             System.out.println("  0. Cancelar");
             linea();
@@ -499,8 +500,8 @@ public class App {
 
             linea();
             System.out.printf("  ✔  %s (%s) x%d → %s%n",
-                    p.nombre, varianteElegida.tamano, cant,
-                    formatoPrecio(varianteElegida.precio * cant));
+                    p.nombre, varianteElegida.getTamano(), cant,
+                    formatoPrecio(varianteElegida.getPrecio() * cant));
             System.out.println("     Agregado al pedido correctamente.");
             linea();
             System.out.println();
@@ -538,7 +539,7 @@ public class App {
                     item.cantidad > 1
                             ? item.producto.nombre + " x" + item.cantidad
                             : item.producto.nombre,
-                    item.variante.tamano,
+                    item.variante.getTamano(),
                     formatoPrecio(item.subtotal()));
         }
 
@@ -672,11 +673,11 @@ public class App {
             }
             if (p.variantes.size() == 1) {
                 System.out.printf("  %2d. %-38s %s%n",
-                        num, p.nombre, formatoPrecio(p.variantes.get(0).precio));
+                        num, p.nombre, formatoPrecio(p.variantes.get(0).getPrecio()));
             } else {
                 System.out.printf("  %2d. %s%n", num, p.nombre);
                 for (Variante v : p.variantes) {
-                    System.out.printf("       · %-18s %s%n", v.tamano, formatoPrecio(v.precio));
+                    System.out.printf("       · %-18s %s%n", v.getTamano(), formatoPrecio(v.getPrecio()));
                 }
             }
             num++;
@@ -706,7 +707,7 @@ public class App {
                 System.out.println("  Seleccione la variante:");
                 for (int i = 0; i < p.variantes.size(); i++) {
                     Variante v = p.variantes.get(i);
-                    System.out.printf("  %d. %-18s %s%n", i + 1, v.tamano, formatoPrecio(v.precio));
+                    System.out.printf("  %d. %-18s %s%n", i + 1, v.getTamano(), formatoPrecio(v.getPrecio()));
                 }
                 System.out.print("  Variante: ");
                 int idxV = Integer.parseInt(leerLinea()) - 1;
@@ -717,14 +718,14 @@ public class App {
                 varianteEditar = p.variantes.get(idxV);
             }
 
-            System.out.printf("  Precio actual: %s%n", formatoPrecio(varianteEditar.precio));
+            System.out.printf("  Precio actual: %s%n", formatoPrecio(varianteEditar.getPrecio()));
             System.out.print("  Nuevo precio (COP): $");
             int nuevoPrecio = Integer.parseInt(leerLinea());
             if (nuevoPrecio <= 0) {
                 System.out.println("\n  El precio debe ser mayor a 0.\n");
                 return;
             }
-            varianteEditar.precio = nuevoPrecio;
+            varianteEditar.setPrecio(nuevoPrecio);
             System.out.printf("%n  Precio actualizado a %s%n%n", formatoPrecio(nuevoPrecio));
 
         } catch (NumberFormatException e) {
