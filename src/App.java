@@ -11,55 +11,6 @@ import Models.*;
 public class App {
 
     // =========================================================
-    //  MODELOS
-    // =========================================================
-
-    // static class Variante {
-    //     String tamano;
-    //     int precio;
-
-    //     Variante(String tamano, int precio) {
-    //         this.tamano = tamano;
-    //         this.precio = precio;
-    //     }
-    // }
-
-    // static class Producto {
-    //     String nombre;
-    //     String descripcion;
-    //     String categoria;
-    //     List<Variante> variantes;
-
-    //     Producto(String nombre, String descripcion, String categoria, Variante... variantes) {
-    //         this.nombre      = nombre;
-    //         this.descripcion = descripcion;
-    //         this.categoria   = categoria;
-    //         this.variantes   = new ArrayList<>(Arrays.asList(variantes));
-    //     }
-
-    //     /** Precio mínimo (para mostrar "desde $X" cuando hay varias variantes) */
-    //     int precioMinimo() {
-    //         return variantes.stream().mapToInt(v -> v.getPrecio()).min().orElse(0);
-    //     }
-    // }
-
-    // static class ItemPedido {
-    //     Producto producto;
-    //     Variante variante;
-    //     int cantidad;
-
-    //     ItemPedido(Producto producto, Variante variante, int cantidad) {
-    //         this.producto  = producto;
-    //         this.variante  = variante;
-    //         this.cantidad  = cantidad;
-    //     }
-
-    //     int subtotal() {
-    //         return variante.getPrecio() * cantidad;
-    //     }
-    // }
-
-    // =========================================================
     //  ESTADO GLOBAL
     // =========================================================
 
