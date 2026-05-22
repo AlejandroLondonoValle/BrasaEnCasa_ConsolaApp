@@ -1,5 +1,5 @@
 <p align="center" style="overflow: hidden; max-height: 220px; border-radius: 8px;">
-  <img src="https://github.com/user-attachments/assets/c19abc79-250c-43cb-b693-b8b2ea299d80"
+  <img src="https://github.com/user-attachments/assets/25e4f01a-3630-4b3d-98b8-db9cac54ba1f"
        alt="Brasa en Casa - Experiencias al Carbón"
        width="100%"
        style="object-fit: cover; object-position: center 40%; margin-top: -60px; margin-bottom: -60px;"/>
